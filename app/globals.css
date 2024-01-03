@@ -2,26 +2,108 @@
 @tailwind components;
 @tailwind utilities;
 
-:root {
-  --foreground-rgb: 0, 0, 0;
-  --background-start-rgb: 214, 219, 220;
-  --background-end-rgb: 255, 255, 255;
+@layer components{
+    .btn {
+        @apply h-10 rounded-full px-5 flex items-center justify-center gap-[10px] transition-all duration-150 text-primary hover:bg-lightprimary shadow-custom-3xl;
+    }
+
+    .icon-btn {
+        @apply w-10 h-10 px-0 bg-white shadow-custom-3xl;
+    }
+
+    .btn p {
+        @apply font-bold whitespace-nowrap;
+    }
+
+    .btn.btn-primary {
+        @apply border border-primary bg-primary hover:border-darkprimary hover:bg-darkprimary;
+    }
+
+    .btn.btn-primary p {
+        @apply text-white;
+    }
+
+    .btn.btn-outline {
+        @apply border border-primary hover:bg-lightprimary;
+    }
+
+    .btn.btn-disabled {
+        @apply border border-verylightgray bg-verylightgray;
+    }
+
+    .btn.btn-disabled p {
+        @apply text-lightgray;
+    }
+
+    .btn.btn-white {
+        @apply border border-white hover:border-lightprimary bg-white hover:bg-lightprimary;
+    }
+
+    .btn.btn-outline p {
+        @apply text-primary;
+    }
+
+    .btn-link {
+        @apply shadow-none hover:bg-transparent;
+    }
+
+    .black-opacity {
+        @apply fixed inset-0 bg-black bg-opacity-25 z-30;
+    }
+    
+    .err{
+        @apply text-xs text-red-500 font-semibold mt-1 ml-5;
+    }
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --foreground-rgb: 255, 255, 255;
-    --background-start-rgb: 0, 0, 0;
-    --background-end-rgb: 0, 0, 0;
-  }
+*:focus {
+    outline: none;
+    -moz-outline: none;
 }
 
-body {
-  color: rgb(var(--foreground-rgb));
-  background: linear-gradient(
-      to bottom,
-      transparent,
-      rgb(var(--background-end-rgb))
-    )
-    rgb(var(--background-start-rgb));
+header{
+    @apply flex items-center justify-between h-20 px-5 shadow-md;
+}
+.below-header-section{
+    height:calc(100vh - 80px);
+}
+
+.sidebar{
+    @apply w-[250px] bg-white shadow-lg h-full;
+}
+.sidebar-item{
+    @apply flex items-center h-12 px-5 m-2 rounded-lg gap-x-5 hover:bg-gray-200 transition opacity-50 first-of-type:mt-5;
+}
+.sidebar-item p{
+    @apply text-[15px] font-bold;
+}
+.sidebar-item.active{
+    @apply opacity-90 bg-gray-200;
+}
+
+.main-section{
+    @apply px-6 py-[30px] overflow-y-auto flex-grow;
+    height:calc(100vh - 80px);
+}
+.main-section-header > div > h2{
+    @apply text-3xl font-semibold;
+}
+.main-section-header > div > p{
+    @apply text-sm text-gray-600 font-semibold mt-2;
+}
+
+.table{
+    @apply border border-gray-300 rounded-xl w-full;
+}
+.table-head, .table-row{
+    @apply grid grid-cols-12;
+}
+.table-row{
+    @apply border-t border-gray-300;
+}
+.table-head > div, .table-row > div{
+    @apply px-5 py-4;
+}
+.table-head div p{
+    @apply text-xs font-bold uppercase;
 }
