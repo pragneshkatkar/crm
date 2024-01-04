@@ -92,18 +92,18 @@ header{
     @apply text-sm text-gray-600 font-semibold mt-2;
 }
 
-.table{
-    @apply border border-gray-300 rounded-xl w-full;
+.table-section{
+    @apply border border-gray-300 rounded-xl w-full mt-5;
 }
-.table-head, .table-row{
-    @apply grid grid-cols-12;
+table{
+    @apply w-full;
 }
 .table-row{
-    @apply border-t border-gray-300;
+    @apply border-t border-gray-300 even:bg-gray-100;
 }
-.table-head > div, .table-row > div{
-    @apply px-5 py-4;
+td, th{
+    @apply text-left px-5 py-4;
 }
-.table-head div p{
+th{
     @apply text-xs font-bold uppercase;
 }

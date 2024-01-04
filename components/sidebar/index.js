@@ -35,7 +35,7 @@ export default function Sidebar(props) {
         <>
             <div className="sidebar">
                 {
-                    SIDEBAR_ITEMS.map((item, key) => <SidebarItem {...item} isActive={active == item.name} />)
+                    SIDEBAR_ITEMS.map((item, key) => <SidebarItem key={key} {...item} isActive={active == item.name} />)
                 }
             </div>
         </>

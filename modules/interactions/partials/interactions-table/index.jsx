@@ -3,13 +3,13 @@ import Button from "@/components/button"
 import Input from "@/components/input"
 import Select from "@/components/select"
 import { useState } from "react"
-import EditCustomerPopup from "../edit-customer-popup"
 import Modal from "@/components/modal"
+import FollowupPopup from "../followup-popup"
 import useToggle from "@/utils/hooks/toggle"
-import RemarksPopup from "@/modules/interactions/partials/remarks-popup"
+import RemarksPopup from "../remarks-popup"
 
 function CustomerRow(props) {
-    const { name, email, contactNumber, interactionWith, id, type, openEditCustomerPopup, openRemarksPopup } = props
+    const { name, email, contactNumber, interactionWith, interactedOn, id, type, openFollowupPopup, openRemarksPopup, followupOn } = props
     return (
         <tr className="table-row w-full group">
             <td>
@@ -20,8 +20,9 @@ function CustomerRow(props) {
                 <p className="text-sm">{email}</p>
                 <p className="text-sm">{contactNumber}</p>
             </td>
-            <td className="flex items-center">
+            <td className="flex flex-col items-start justify-start gap-y-2">
                 <p className={`block px-3 text-xs uppercase font-semibold py-1 rounded-full ${interactionWith ? "bg-green-200" : "bg-red-200"}`}>{interactionWith || "Not contacted yet"}</p>
+                <p className="text-xs font-semibold">{interactedOn}</p>
             </td>
             <td>
                 <p>{type}</p>
@@ -29,27 +30,28 @@ function CustomerRow(props) {
             <td className="opacity-0 group-hover:opacity-100">
                 <Button text="Add remarks" leftIcon="plus" attrs={{onClick: openRemarksPopup}} />
             </td>
-            <td className="flex items-center gap-x-3 opacity-0 group-hover:opacity-100">
-                <Button icon="edit" attrs={{ onClick: () => openEditCustomerPopup(id) }} />
-                <Button icon="delete-red" />
+            <td className={`gap-x-3 ${followupOn ? "" : "opacity-0 group-hover:opacity-100"}`}>
+                {
+                    followupOn ? <p className="text-sm font-semibold">Followup on {followupOn}</p> : <Button text="Add followup" leftIcon="followup" attrs={{ onClick: () => openFollowupPopup(id) }} />
+                }
             </td>
         </tr>
     )
 }
 
-export default function CustomersTable(props) {
-    const { CUSTOMERS } = props
+export default function InteractionsTable(props) {
+    const { INTERACTIONS } = props
 
-    const [customers, setCustomers] = useState(CUSTOMERS)
+    const [interactions, setInteractions] = useState(INTERACTIONS)
 
     const onChangeSearchInput = (e) => {
         const keyword = e.target.value
         if (keyword == "" || keyword == null) {
-            setCustomers(CUSTOMERS)
+            setInteractions(INTERACTIONS)
             return
         }
 
-        let filteredCustomers = CUSTOMERS.filter(contact => {
+        let filteredInteractions = INTERACTIONS.filter(contact => {
             const name = contact.name.toLowerCase();
             const email = contact.email.toLowerCase();
             const contactNumber = contact.contactNumber.toLowerCase();
@@ -57,11 +59,11 @@ export default function CustomersTable(props) {
             return name.includes(keyword) || email.includes(keyword) || contactNumber.includes(keyword);
         });
 
-        setCustomers(filteredCustomers)
+        setInteractions(filteredInteractions)
     }
     const searchInput = {
         attrs: {
-            placeholder: "Search for customers",
+            placeholder: "Search for interactions",
             onChange: onChangeSearchInput
         }
     }
@@ -69,17 +71,17 @@ export default function CustomersTable(props) {
     const onChangeInteractionSelect = (e) => {
         const interaction = e.target.value
         if (interaction == "" || interaction == null) {
-            setCustomers(CUSTOMERS)
+            setInteractions(INTERACTIONS)
             return
         }
 
-        let filteredCustomers = CUSTOMERS.filter(contact => {
+        let filteredInteractions = INTERACTIONS.filter(contact => {
             const interactionWith = contact?.interactionWith?.toLowerCase();
 
             return interaction == "not" ? !interactionWith : interactionWith?.includes(interaction);
         });
 
-        setCustomers(filteredCustomers)
+        setInteractions(filteredInteractions)
 
     }
 
@@ -113,15 +115,15 @@ export default function CustomersTable(props) {
     const onChangeTypeSelect = (e) => {
         const type = e.target.value
         if (type == "" || type == null) {
-            setCustomers(CUSTOMERS)
+            setInteractions(INTERACTIONS)
             return
         }
 
-        let filteredCustomers = CUSTOMERS.filter(contact => {
+        let filteredInteractions = INTERACTIONS.filter(contact => {
             return contact?.type == type;
         });
 
-        setCustomers(filteredCustomers)
+        setInteractions(filteredInteractions)
 
     }
 
@@ -135,13 +137,9 @@ export default function CustomersTable(props) {
             value: "potential"
         },
         {
-            text: "Past",
-            value: "past"
+            text: "Not potential",
+            value: "not potential"
         },
-        {
-            text: "Current",
-            value: "current"
-        }
     ]
     const typeSelect = {
         label: "select type",
@@ -152,9 +150,9 @@ export default function CustomersTable(props) {
     }
     
     const [activeId, setActiveId] = useState(null)
-    const isEditCustomerPopupOpen = activeId != null
-    const openEditCustomerPopup = (id) => setActiveId(id)
-    const closeEditCustomerPopup = () => setActiveId(null)
+    const isFollowupPopupShown = activeId != null
+    const openFollowupPopup = (id) => setActiveId(id)
+    const closeFollowupPopup = () => setActiveId(null)
 
     const {isTrue: isRemarksPopupShown, setTrue: openRemarksPopup, setFalse: closeRemarksPopup} = useToggle()
     return (
@@ -196,22 +194,22 @@ export default function CustomersTable(props) {
                     </thead>
                     <tbody>
                         {
-                            customers.map((item, key) => <CustomerRow openEditCustomerPopup={openEditCustomerPopup} openRemarksPopup={openRemarksPopup} {...item} key={key} id={key + 1} />)
+                            interactions.map((item, key) => <CustomerRow openFollowupPopup={openFollowupPopup} openRemarksPopup={openRemarksPopup} {...item} key={key} id={key + 1} />)
                         }
                     </tbody>
                 </table>
             </div>
 
-            <Modal isOpen={isEditCustomerPopupOpen} onClose={closeEditCustomerPopup}>
+            <Modal isOpen={isFollowupPopupShown} onClose={closeFollowupPopup}>
                 <div className="bg-white px-5 py-8 w-[500px] rounded-xl">
                     <div className="flex items-center justify-between">
                         <div className="flex items-center gap-x-4">
-                            <p>Edit customer</p>
+                            <p className="text-lg font-semibold">Add followup</p>
                         </div>
 
-                        <Button icon="close" attrs={{ onClick: closeEditCustomerPopup }} />
+                        <Button icon="close" attrs={{ onClick: closeFollowupPopup }} />
                     </div>
-                    <EditCustomerPopup {...customers.filter((item, key) => key + 1 == activeId)[0]}/>
+                    <FollowupPopup {...interactions.filter((item, key) => key + 1 == activeId)[0]}/>
                 </div>
             </Modal>
             
