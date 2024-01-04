@@ -18,17 +18,17 @@ export default function Sidebar(props) {
         {
             name: "Dashboard",
             link: "/dashboard",
-            icon: "dashboard"
+            icon: "dashboard-primary"
         },
         {
             name: "Customers",
             link: "/dashboard/customers",
-            icon: "customers"
+            icon: "customers-primary"
         },
         {
             name: "Interactions",
             link: "/dashboard/interactions",
-            icon: "interactions"
+            icon: "interactions-primary"
         }
     ]
     return (

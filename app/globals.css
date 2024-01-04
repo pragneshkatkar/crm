@@ -72,13 +72,16 @@ header{
     @apply w-[250px] bg-white shadow-lg h-full;
 }
 .sidebar-item{
-    @apply flex items-center h-12 px-5 m-2 rounded-lg gap-x-5 hover:bg-gray-200 transition opacity-50 first-of-type:mt-5;
+    @apply flex items-center h-12 px-5 m-2 rounded-lg gap-x-5 transition opacity-50 first-of-type:mt-5 brightness-0;
 }
 .sidebar-item p{
     @apply text-[15px] font-bold;
 }
 .sidebar-item.active{
-    @apply opacity-90 bg-gray-200;
+    @apply opacity-90 bg-lightprimary filter-none;
+}
+.sidebar-item.active p{
+    @apply text-primary;
 }
 
 .main-section{
